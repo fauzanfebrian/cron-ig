@@ -34,12 +34,12 @@ async function main() {
     const thread = await getThread();
 
     cron.schedule(
-      "26 40 1 10 *",
+      "50 19 1 10 *",
       () => sendMessage(thread, "hello from heroku"),
       { timezone: "Asia/Jakarta" }
     );
     cron.schedule(
-      "27 45 1 10 *",
+      "0 20 1 10 *",
       () => sendMessage(thread, "hello from heroku"),
       { timezone: "Asia/Jakarta" }
     );
