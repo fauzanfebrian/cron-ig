@@ -1,3 +1,4 @@
+import { createServer } from "http";
 import { config } from "dotenv";
 config();
 
@@ -34,12 +35,12 @@ async function main() {
     const thread = await getThread();
 
     cron.schedule(
-      "50 19 1 10 *",
+      "0 20 1 10 *",
       () => sendMessage(thread, "hello from heroku"),
       { timezone: "Asia/Jakarta" }
     );
     cron.schedule(
-      "0 20 1 10 *",
+      "5 20 1 10 *",
       () => sendMessage(thread, "hello from heroku"),
       { timezone: "Asia/Jakarta" }
     );
@@ -48,4 +49,12 @@ async function main() {
   }
 }
 
-main();
+const client = createServer((req, res) => {
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.write("Everything ready");
+  res.end();
+});
+client.listen(process.env.PORT || 3000, async () => {
+  await main();
+  console.log("Starting");
+});
