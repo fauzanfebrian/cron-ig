@@ -1,10 +1,11 @@
-import { createServer } from "http";
 import { config } from "dotenv";
 config();
 
-import cron from "node-cron";
 import IGClient, { sendMessage, changeProfilePicture } from "./IGClient";
 import { createImageByDate } from "./image";
+import { createServer } from "http";
+import cron from "node-cron";
+import { response } from "./ClientResponse";
 
 async function main() {
   try {
@@ -33,11 +34,7 @@ async function main() {
 }
 
 // adding res client for checking application ready or not
-const client = createServer((req, res) => {
-  res.writeHead(200, { "Content-Type": "text/plain" });
-  res.write("Everything ready");
-  res.end();
-});
+const client = createServer(response);
 client.listen(process.env.PORT || 3000, () =>
   main()
     .then(() => console.log("Started"))
