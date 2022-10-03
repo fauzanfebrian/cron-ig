@@ -3,41 +3,68 @@ import moment from "moment";
 
 const { IG_USERNAME, IG_PASSWORD, IG_DESTINATION } = process.env;
 
-export default async function IGClient() {
-  const client = new IgApiClient();
-  client.state.generateDevice(IG_USERNAME as string);
+export default class IGClient {
+  private username: string;
+  private password: string;
+  private destination: string;
 
-  console.log(`Sign in to ${IG_USERNAME}`);
-  //   await client.simulate.preLoginFlow();
-  await client.account.login(IG_USERNAME as string, IG_PASSWORD as string);
-  //   await client.simulate.postLoginFlow();
-  console.log(`Sign in to ${IG_USERNAME} success`);
+  declare thread: DirectThreadEntity;
+  declare client: IgApiClient;
 
-  const userId = await client.user.getIdByUsername(IG_DESTINATION as string);
-  const thread = client.entity.directThread([userId.toString()]);
-
-  return { thread, client };
-}
-
-export async function sendMessage(thread: DirectThreadEntity, msg = "TEST") {
-  try {
-    await thread.broadcastText(msg, true);
-    const timeSending = moment().utcOffset(7).format("DD-MM-YYYY HH:mm");
-    console.log(
-      `Sending "${msg}" to "${IG_DESTINATION}" success at ${timeSending}`
-    );
-  } catch (error) {
-    console.error("Sending Message Error:", error);
-    throw error;
+  constructor(username?: string, password?: string, destination?: string) {
+    this.username = username || (IG_USERNAME as string);
+    this.password = password || (IG_PASSWORD as string);
+    this.destination = destination || (IG_DESTINATION as string);
   }
-}
 
-export async function changeProfilePicture(client: IgApiClient, image: Buffer) {
-  try {
-    await client.account.changeProfilePicture(image);
-    console.log(`Changing ${IG_USERNAME}'s profile picture success`);
-  } catch (error) {
-    console.error("Change Profile Picture Error:", error);
-    throw error;
+  async connect() {
+    try {
+      const client = new IgApiClient();
+      client.state.generateDevice(this.username);
+
+      console.log(`Sign in to ${this.username}`);
+      await client.account.login(this.username, this.password);
+      console.log(`Sign in to ${this.username} success`);
+
+      const userId = await client.user.getIdByUsername(this.destination);
+      const thread = client.entity.directThread([userId.toString()]);
+
+      this.client = client;
+      this.thread = thread;
+    } catch (error) {
+      console.error("IG Connecting Error: ", error);
+      throw error;
+    }
+  }
+
+  async sendMessage(msg: string) {
+    try {
+      // check the ig has connected or not
+      if (!this.thread) await this.connect();
+
+      console.log(`Sending message to @${this.destination}`);
+      await this.thread.broadcastText(msg, true);
+      const timeSending = moment().utcOffset(7).format("DD-MM-YYYY HH:mm");
+      console.log(
+        `Sending message to @${this.destination} success at ${timeSending}`
+      );
+    } catch (error) {
+      console.error("Sending Message Error:", error);
+      throw error;
+    }
+  }
+
+  async changeProfilePicture(image: Buffer) {
+    try {
+      // check the ig has connected or not
+      if (!this.client) await this.connect();
+
+      console.log(`Changing @${this.username}'s profile picture`);
+      await this.client.account.changeProfilePicture(image);
+      console.log(`Changing @${this.username}'s profile picture success`);
+    } catch (error) {
+      console.error("Change Profile Picture Error:", error);
+      throw error;
+    }
   }
 }

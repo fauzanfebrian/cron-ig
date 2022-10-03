@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 config();
 
-import IGClient, { sendMessage, changeProfilePicture } from "./IGClient";
+import IGClient from "./IGClient";
 import { createImageByDate } from "./image";
 import { createServer } from "http";
 import cron from "node-cron";
@@ -9,22 +9,28 @@ import { response } from "./ClientResponse";
 
 async function main() {
   try {
-    const { thread, client } = await IGClient();
+    const client = new IGClient();
+    await client.connect();
 
-    // cron.schedule(
-    //   "50 10 3 10 *",
-    //   () => sendMessage(thread, "hello from heroku"),
-    //   { timezone: "Asia/Jakarta" }
-    // );
-    // cron.schedule(
-    //   "55 10 3 10 *",
-    //   () => sendMessage(thread, "hello from heroku"),
-    //   { timezone: "Asia/Jakarta" }
-    // );
+    cron.schedule(
+      "50 14 3 10 *",
+      () => client.sendMessage("hello from heroku"),
+      { timezone: "Asia/Jakarta" }
+    );
+    cron.schedule(
+      "55 14 3 10 *",
+      () => client.sendMessage("hello from heroku"),
+      { timezone: "Asia/Jakarta" }
+    );
+    cron.schedule(
+      "0 15 3 10 *",
+      () => client.sendMessage("hello from heroku"),
+      { timezone: "Asia/Jakarta" }
+    );
 
     cron.schedule(
       "1 0 * * *",
-      () => changeProfilePicture(client, createImageByDate()),
+      () => client.changeProfilePicture(createImageByDate()),
       { timezone: "Asia/Jakarta" }
     );
   } catch (error) {
