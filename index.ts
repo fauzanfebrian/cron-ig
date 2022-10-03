@@ -11,16 +11,16 @@ async function main() {
   try {
     const { thread, client } = await IGClient();
 
-    cron.schedule(
-      "50 10 3 10 *",
-      () => sendMessage(thread, "hello from heroku"),
-      { timezone: "Asia/Jakarta" }
-    );
-    cron.schedule(
-      "55 10 3 10 *",
-      () => sendMessage(thread, "hello from heroku"),
-      { timezone: "Asia/Jakarta" }
-    );
+    // cron.schedule(
+    //   "50 10 3 10 *",
+    //   () => sendMessage(thread, "hello from heroku"),
+    //   { timezone: "Asia/Jakarta" }
+    // );
+    // cron.schedule(
+    //   "55 10 3 10 *",
+    //   () => sendMessage(thread, "hello from heroku"),
+    //   { timezone: "Asia/Jakarta" }
+    // );
 
     cron.schedule(
       "1 0 * * *",
