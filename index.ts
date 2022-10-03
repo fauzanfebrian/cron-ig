@@ -2,46 +2,28 @@ import { createServer } from "http";
 import { config } from "dotenv";
 config();
 
-import { IgApiClient, DirectThreadEntity } from "instagram-private-api";
 import cron from "node-cron";
-import moment from "moment";
-
-const { IG_USERNAME, IG_PASSWORD, IG_DESTINATION } = process.env;
-
-async function getThread() {
-  const ig = new IgApiClient();
-  ig.state.generateDevice(IG_USERNAME as string);
-
-  console.log(`Sign in to ${IG_USERNAME}`);
-  //   await ig.simulate.preLoginFlow();
-  await ig.account.login(IG_USERNAME as string, IG_PASSWORD as string);
-  //   await ig.simulate.postLoginFlow();
-  console.log(`Sign in to ${IG_USERNAME} success`);
-
-  const userId = await ig.user.getIdByUsername(IG_DESTINATION as string);
-  const thread = ig.entity.directThread([userId.toString()]);
-
-  return thread;
-}
-
-async function sendMessage(thread: DirectThreadEntity, msg = "TEST") {
-  await thread.broadcastText(msg, true);
-  const timeSending = moment().utcOffset(7).format("DD-MM-YYYY HH:mm");
-  console.log(`Sending ${msg} to ${IG_DESTINATION} success at ${timeSending}`);
-}
+import IGClient, { sendMessage, changeProfilePicture } from "./IGClient";
+import { createImageByDate } from "./image";
 
 async function main() {
   try {
-    const thread = await getThread();
+    const { thread, client } = await IGClient();
 
     cron.schedule(
-      "17 9 3 10 *",
+      "50 10 3 10 *",
       () => sendMessage(thread, "hello from heroku"),
       { timezone: "Asia/Jakarta" }
     );
     cron.schedule(
-      "20 9 3 10 *",
+      "55 10 3 10 *",
       () => sendMessage(thread, "hello from heroku"),
+      { timezone: "Asia/Jakarta" }
+    );
+
+    cron.schedule(
+      "1 0 * * *",
+      () => changeProfilePicture(client, createImageByDate()),
       { timezone: "Asia/Jakarta" }
     );
   } catch (error) {
@@ -49,6 +31,7 @@ async function main() {
   }
 }
 
+// adding res client for checking application ready or not
 const client = createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" });
   res.write("Everything ready");
