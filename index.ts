@@ -13,17 +13,17 @@ async function main() {
     await client.connect();
 
     cron.schedule(
-      "50 14 3 10 *",
-      () => client.sendMessage("hello from heroku"),
-      { timezone: "Asia/Jakarta" }
-    );
-    cron.schedule(
-      "55 14 3 10 *",
-      () => client.sendMessage("hello from heroku"),
-      { timezone: "Asia/Jakarta" }
-    );
-    cron.schedule(
       "0 15 3 10 *",
+      () => client.sendMessage("hello from heroku"),
+      { timezone: "Asia/Jakarta" }
+    );
+    cron.schedule(
+      "5 15 3 10 *",
+      () => client.sendMessage("hello from heroku"),
+      { timezone: "Asia/Jakarta" }
+    );
+    cron.schedule(
+      "10 15 3 10 *",
       () => client.sendMessage("hello from heroku"),
       { timezone: "Asia/Jakarta" }
     );
