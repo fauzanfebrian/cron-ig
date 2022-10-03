@@ -25,8 +25,8 @@ async function getThread() {
 }
 
 async function sendMessage(thread: DirectThreadEntity, msg = "TEST") {
-  const timeSending = moment().utcOffset(7).format("DD-MM-YYYY HH:mm");
   await thread.broadcastText(msg, true);
+  const timeSending = moment().utcOffset(7).format("DD-MM-YYYY HH:mm");
   console.log(`Sending ${msg} to ${IG_DESTINATION} success at ${timeSending}`);
 }
 
@@ -35,12 +35,12 @@ async function main() {
     const thread = await getThread();
 
     cron.schedule(
-      "0 20 1 10 *",
+      "17 9 3 10 *",
       () => sendMessage(thread, "hello from heroku"),
       { timezone: "Asia/Jakarta" }
     );
     cron.schedule(
-      "5 20 1 10 *",
+      "20 9 3 10 *",
       () => sendMessage(thread, "hello from heroku"),
       { timezone: "Asia/Jakarta" }
     );
