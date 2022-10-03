@@ -24,7 +24,7 @@ export async function sendMessage(thread: DirectThreadEntity, msg = "TEST") {
     await thread.broadcastText(msg, true);
     const timeSending = moment().utcOffset(7).format("DD-MM-YYYY HH:mm");
     console.log(
-      `Sending ${msg} to "${IG_DESTINATION}" success at ${timeSending}`
+      `Sending "${msg}" to "${IG_DESTINATION}" success at ${timeSending}`
     );
   } catch (error) {
     console.error("Sending Message Error:", error);

@@ -14,12 +14,12 @@ export function createImageByDate() {
   context.fillRect(0, 0, width, height);
 
   context.textAlign = "center";
-  context.fillStyle = "#fff";
-  context.font = "120px Impact";
-  context.fillText(date, width / 2, height / 2);
+  context.fillStyle = "#f66b0e";
+  context.font = "170px Verdana";
+  context.fillText(date, width / 2, height / 2 + 40);
 
   const buffer = canvas.toBuffer("image/jpeg");
   return buffer;
 }
 
-fs.writeFileSync("./image.png", createImageByDate());
+// fs.writeFileSync("./profile.png", createImageByDate());

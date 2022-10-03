@@ -28,6 +28,7 @@ async function main() {
     );
   } catch (error) {
     console.error(error);
+    throw error;
   }
 }
 
@@ -37,7 +38,8 @@ const client = createServer((req, res) => {
   res.write("Everything ready");
   res.end();
 });
-client.listen(process.env.PORT || 3000, async () => {
-  await main();
-  console.log("Starting");
-});
+client.listen(process.env.PORT || 3000, () =>
+  main()
+    .then(() => console.log("Started"))
+    .catch(console.error)
+);
