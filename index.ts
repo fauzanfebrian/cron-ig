@@ -8,35 +8,26 @@ import cron from "node-cron";
 import { response } from "./ClientResponse";
 
 async function main() {
-  try {
-    const client = new IGClient();
-    await client.connect();
+  const client = new IGClient();
+  await client.connect();
 
-    cron.schedule(
-      "0 15 3 10 *",
-      () => client.sendMessage("hello from heroku"),
-      { timezone: "Asia/Jakarta" }
-    );
-    cron.schedule(
-      "5 15 3 10 *",
-      () => client.sendMessage("hello from heroku"),
-      { timezone: "Asia/Jakarta" }
-    );
-    cron.schedule(
-      "10 15 3 10 *",
-      () => client.sendMessage("hello from heroku"),
-      { timezone: "Asia/Jakarta" }
-    );
+  client.changeProfilePicture(createImageByDate());
 
-    cron.schedule(
-      "1 0 * * *",
-      () => client.changeProfilePicture(createImageByDate()),
-      { timezone: "Asia/Jakarta" }
-    );
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  cron.schedule("50 7 11 10 *", () => client.sendMessage("hello from heroku"), {
+    timezone: "Asia/Jakarta",
+  });
+  cron.schedule("0 8 11 10 *", () => client.sendMessage("hello from heroku"), {
+    timezone: "Asia/Jakarta",
+  });
+  cron.schedule("10 8 11 10 *", () => client.sendMessage("hello from heroku"), {
+    timezone: "Asia/Jakarta",
+  });
+
+  cron.schedule(
+    "1 0 * * *",
+    () => client.changeProfilePicture(createImageByDate()),
+    { timezone: "Asia/Jakarta" }
+  );
 }
 
 // adding res client for checking application ready or not
@@ -44,5 +35,5 @@ const client = createServer(response);
 client.listen(process.env.PORT || 3000, () =>
   main()
     .then(() => console.log("Started"))
-    .catch(console.error)
+    .catch(() => console.error("Connecting Failed"))
 );

@@ -4,18 +4,14 @@ import moment from "moment";
 const { IG_USERNAME, IG_PASSWORD, IG_DESTINATION } = process.env;
 
 export default class IGClient {
-  private username: string;
-  private password: string;
-  private destination: string;
-
   declare thread: DirectThreadEntity;
   declare client: IgApiClient;
 
-  constructor(username?: string, password?: string, destination?: string) {
-    this.username = username || (IG_USERNAME as string);
-    this.password = password || (IG_PASSWORD as string);
-    this.destination = destination || (IG_DESTINATION as string);
-  }
+  constructor(
+    private username = IG_USERNAME as string,
+    private password = IG_PASSWORD as string,
+    private destination = IG_DESTINATION as string
+  ) {}
 
   async connect() {
     try {
@@ -44,9 +40,8 @@ export default class IGClient {
 
       console.log(`Sending message to @${this.destination}`);
       await this.thread.broadcastText(msg, true);
-      const timeSending = moment().utcOffset(7).format("DD-MM-YYYY HH:mm");
       console.log(
-        `Sending message to @${this.destination} success at ${timeSending}`
+        `Sending message to @${this.destination} success at ${this.getTime()}`
       );
     } catch (error) {
       console.error("Sending Message Error:", error);
@@ -61,10 +56,18 @@ export default class IGClient {
 
       console.log(`Changing @${this.username}'s profile picture`);
       await this.client.account.changeProfilePicture(image);
-      console.log(`Changing @${this.username}'s profile picture success`);
+      console.log(
+        `Changing @${
+          this.username
+        }'s profile picture success at ${this.getTime()}`
+      );
     } catch (error) {
       console.error("Change Profile Picture Error:", error);
       throw error;
     }
+  }
+
+  getTime() {
+    return moment().utcOffset(7).format("DD-MM-YYYY HH:mm:ss");
   }
 }
