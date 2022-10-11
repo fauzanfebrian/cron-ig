@@ -11,8 +11,6 @@ async function main() {
   const client = new IGClient();
   await client.connect();
 
-  client.changeProfilePicture(createImageByDate());
-
   cron.schedule("50 7 11 10 *", () => client.sendMessage("hello from heroku"), {
     timezone: "Asia/Jakarta",
   });
