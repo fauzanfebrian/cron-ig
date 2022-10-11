@@ -18,9 +18,9 @@ export default class IGClient {
       const client = new IgApiClient();
       client.state.generateDevice(this.username);
 
-      console.log(`Sign in to ${this.username}`);
+      this.consoleTime(`Sign in to ${this.username}`);
       await client.account.login(this.username, this.password);
-      console.log(`Sign in to ${this.username} success`);
+      this.consoleTime(`Sign in to ${this.username} success`);
 
       const userId = await client.user.getIdByUsername(this.destination);
       const thread = client.entity.directThread([userId.toString()]);
@@ -28,7 +28,7 @@ export default class IGClient {
       this.client = client;
       this.thread = thread;
     } catch (error) {
-      console.error("IG Connecting Error: ", error);
+      this.consoleTime("IG Connecting Error: ", error);
       throw error;
     }
   }
@@ -38,11 +38,9 @@ export default class IGClient {
       // check the ig has connected or not
       if (!this.thread) await this.connect();
 
-      console.log(`Sending message to @${this.destination}`);
+      this.consoleTime(`Sending message to @${this.destination}`);
       await this.thread.broadcastText(msg, true);
-      console.log(
-        `Sending message to @${this.destination} success at ${this.getTime()}`
-      );
+      this.consoleTime(`Sending message to @${this.destination} success`);
     } catch (error) {
       console.error("Sending Message Error:", error);
       throw error;
@@ -54,20 +52,17 @@ export default class IGClient {
       // check the ig has connected or not
       if (!this.client) await this.connect();
 
-      console.log(`Changing @${this.username}'s profile picture`);
+      this.consoleTime(`Changing @${this.username}'s profile picture`);
       await this.client.account.changeProfilePicture(image);
-      console.log(
-        `Changing @${
-          this.username
-        }'s profile picture success at ${this.getTime()}`
-      );
+      this.consoleTime(`Changing @${this.username}'s profile picture success`);
     } catch (error) {
-      console.error("Change Profile Picture Error:", error);
+      this.consoleTime("Change Profile Picture Error:", error);
       throw error;
     }
   }
 
-  getTime() {
-    return moment().utcOffset(7).format("DD-MM-YYYY HH:mm:ss");
+  consoleTime(text: string, ...msg: unknown[]) {
+    const time = moment().utcOffset(7).format("DD-MM-YYYY HH:mm:ss");
+    return console.log(`[${time}]: ${text}`, ...msg);
   }
 }
