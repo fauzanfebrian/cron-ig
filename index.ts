@@ -11,18 +11,24 @@ async function main() {
   const client = new IGClient();
   await client.connect();
 
-  cron.schedule("50 7 11 10 *", () => client.sendMessage("hello from heroku"), {
+  cron.schedule(
+    "57 23 25 10 *",
+    () => client.sendMessage("hello from heroku"),
+    {
+      timezone: "Asia/Jakarta",
+    }
+  );
+
+  cron.schedule("0 0 26 10 *", () => client.sendMessage("hello from heroku"), {
     timezone: "Asia/Jakarta",
   });
-  cron.schedule("0 8 11 10 *", () => client.sendMessage("hello from heroku"), {
-    timezone: "Asia/Jakarta",
-  });
-  cron.schedule("10 8 11 10 *", () => client.sendMessage("hello from heroku"), {
+
+  cron.schedule("0 2 26 10 *", () => client.sendMessage("hello from heroku"), {
     timezone: "Asia/Jakarta",
   });
 
   cron.schedule(
-    "1 0 * * *",
+    "0 2 * * *",
     () => client.changeProfilePicture(createImageByDate()),
     { timezone: "Asia/Jakarta" }
   );
