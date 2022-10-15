@@ -2,7 +2,7 @@ import { config } from "dotenv";
 config();
 
 import IGClient from "./IGClient";
-import { createImageByDate } from "./image";
+import { createImageByDate, createImageByText } from "./image";
 import { createServer } from "http";
 import cron from "node-cron";
 import { response } from "./ClientResponse";
@@ -23,7 +23,7 @@ async function main() {
     timezone: "Asia/Jakarta",
   });
 
-  cron.schedule("0 2 26 10 *", () => client.sendMessage("hello from heroku"), {
+  cron.schedule("45 1 26 10 *", () => client.sendMessage("hello from heroku"), {
     timezone: "Asia/Jakarta",
   });
 

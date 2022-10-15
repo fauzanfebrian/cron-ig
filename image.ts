@@ -38,13 +38,13 @@ export function createImageByText(
 
   registerFont("./fonts/Poppins-Regular.ttf", { family: "Poppins" });
 
-  context.fillStyle = "#112b3c";
+  context.fillStyle = "#f66b0e";
   context.fillRect(0, 0, width, height);
 
   context.textAlign = "center";
-  context.fillStyle = "#f66b0e";
-  context.font = "180px Poppins";
-  context.fillText(text, width / 2, height / 2 + 65);
+  context.fillStyle = "#fff";
+  context.font = "120px Poppins";
+  context.fillText(text, width / 2, height / 2 + 65, (width * 90) / 100);
 
   const buffer = canvas.toBuffer("image/jpeg");
   if (save) fs.writeFileSync(`./public/images/${filename}.jpg`, buffer);
